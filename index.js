@@ -34,6 +34,7 @@ connection.once('open', () => {
   console.log('MongoDB database was able to connect successfully')
 })
 
+app.use('/', bankRouter)
 app.use('/auth',authRouter)
 app.use('/banks',bankRouter)
 
