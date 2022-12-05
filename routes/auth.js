@@ -54,7 +54,7 @@ router.post('/register', async (req, res) => {
 
 // this is the login  route of the project
 
-router.get('/login', async (req, res) => {
+router.post('/login', async (req, res) => {
 
     const { error, value } = validateSignin(req.body)
 
