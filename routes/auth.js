@@ -227,7 +227,7 @@ router.put('/update_pin', VerifyUserToken, async (req,res) => {
 
         if (OriginalPin !== value.old_pin) {
             return res.status(403).json({
-                error_message: "Incorrect pin" ,
+                error_message: "Your old pin is incorrect" ,
                 special_message:null
             });   
         }
