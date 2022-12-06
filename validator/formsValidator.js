@@ -45,8 +45,8 @@ const BankSchema = Joi.object({
 
 
 const Transaction_PinSchema = Joi.object({
-    old_pin: Joi.string().min(4).max(4).required(),
-    new_pin: Joi.string().min(4).max(4).required(),
+    old_pin: Joi.number().min(4).max(4).required(),
+    new_pin: Joi.number().min(4).max(4).required(),
 })
 
 
