@@ -250,4 +250,16 @@ router.put('/update_pin', VerifyUserToken, async (req,res) => {
 } )
 
 
+router.get('/my_profile',VerifyUserToken, async ( req, res ) => {
+
+    const { password, transaction_pin ,...others } = req.user._doc
+
+    return res.status(200).json({
+        ...others,
+        transaction_pin: transaction_pin ? "exist" : null
+    })
+
+} )
+
+
 module.exports = router
