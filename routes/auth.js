@@ -170,7 +170,17 @@ router.put('/reset_password', VerifyUserToken, async (req,res) => {
         return res.status(400).json(Joierrorformat(error.details[0]))
     }
 
-    const password = CryptoJS.AES.encrypt(value.password, process.env.CRYPTO_PASS_SEC ).toString()
+    const hashedPassword = CryptoJS.AES.decrypt(req.user._doc.password, process.env.CRYPTO_PASS_SEC)
+    const Originalpassword = hashedPassword.toString(CryptoJS.enc.Utf8)
+
+    if (Originalpassword !== value.old_password) {
+        return res.status(403).json({
+            error_message: "Your old password is incorrect" ,
+            special_message:null
+        });   
+    }
+
+    const password = CryptoJS.AES.encrypt(value.new_password, process.env.CRYPTO_PASS_SEC ).toString()
 
     const newUser = {
         password

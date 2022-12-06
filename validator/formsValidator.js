@@ -27,7 +27,8 @@ const editprofileSchema = Joi.object({
 
 // formvalidation for passsword_reset
 const passwordrestSchema = Joi.object({
-    password: Joi.string().min(4).max(30).required(),
+    old_password: Joi.string().min(4).max(30).required(),
+    new_password: Joi.string().min(4).max(30).required(),
 })
 
 
