@@ -32,10 +32,32 @@ const passwordrestSchema = Joi.object({
 })
 
 
+// formvalidation for forgot_password
+const ForgotpasswordSchema = Joi.object({
+    email: Joi.string().email().required(),
+})
 
 
+// formvalidation for forgot_password
+const VerifyForgotpasswordSchema = Joi.object({
+    email: Joi.string().email().required(),
+    otp: Joi.string().length(4).required()
+})
 
-// formvalidation for updatingProfile
+
+// formvalidation for user otp for verification
+const VerifyUserSchema = Joi.object({
+    user_id: Joi.string().required(),
+    email: Joi.string().email().required()
+})
+
+// formvalidation for password_reset with email
+const ResetpasswordEmailSchema = Joi.object({
+    email: Joi.string().email().required(),
+    new_password: Joi.string().min(4).max(30).required(),
+})
+
+// formvalidation for Bank
 const BankSchema = Joi.object({
     account_number: Joi.string().min(10).max(10).required(),
     account_name: Joi.string().required(),
@@ -43,19 +65,66 @@ const BankSchema = Joi.object({
     bank_id: Joi.number().required(),
 })
 
+const WithdrawSchema = Joi.object({
+    withdrawal_amount:Joi.number().min(1000).max(100000).required(),
+    account_number:Joi.string().min(10).max(10).required()
+})
 
-const Transaction_PinSchema = Joi.object({
+
+const Transaction_PinSchema = Joi.object({ 
     old_pin: Joi.number().min(4).max(4).required(),
     new_pin: Joi.number().min(4).max(4).required(),
 })
 
 
+
+
+const ReportBugSchema = Joi.object({
+    report_message: Joi.string().required(),
+    report_image: Joi.object()
+})
+
+
+
+
+
+const CryptoSchema = Joi.object({
+    crypto_name: Joi.string().required(),
+    crypto_address: Joi.string().required(),
+    crypto_init_price_per_one: Joi.number().required(),
+    crypto_resell_dollar_price: Joi.number().required(),
+    crypto_symbol:Joi.string().required()
+})
+
+const CryptoOrderSchema = Joi.object({
+    crypto_id:Joi.string().required(),
+    crypto_amount_received: Joi.number().required(),
+    crypto_wallet_type: Joi.string().required(),
+    crypto_proof: Joi.object()
+})
+
 exports.validateSignup = validator(signupSchema)
 exports.validateSignin = validator(signinSchema)
 exports.validateEdit = validator(editprofileSchema)
+
+
 exports.validateResetPassword = validator(passwordrestSchema)
+exports.validateForgotPassword = validator(ForgotpasswordSchema)
+exports.validateVerifyForgotPassword = validator(VerifyForgotpasswordSchema)
+exports.validateForgotPasswordEmailReset = validator(ResetpasswordEmailSchema)
+exports.validateUserVerification = validator(VerifyUserSchema)
+
+
+exports.validateCryptoVerification = validator(CryptoSchema)
+exports.validateCryptoVerification = validator(CryptoSchema)
+exports.validateCryptoOrderVerification = validator(CryptoOrderSchema)
 
 
 exports.validateBank = validator(BankSchema)
+exports.validateWithdrawal = validator(WithdrawSchema)
 
 exports.validateTransactionPin = validator(Transaction_PinSchema)
+
+
+exports.validateReportBug = validator(ReportBugSchema)
+

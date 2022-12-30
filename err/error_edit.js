@@ -29,10 +29,26 @@ const MongoDBerrorformat  = (error,unit) => {
         if( error.message.includes('phone_number')){
             return "That phone number has already been used"
         }
+        
+        if( error.message.includes('crypto_name')){
+            return "This crypto currency already exit"
+        }
+
+        if( error.message.includes('crypto_address')){
+            return "Another crypto currency is already using this address"
+        }
+
+        if( error.message.includes('crypto_address')){
+            return "Another crypto currency is already using this address"
+        }
 
     }else{
         if( error.message.includes('Cannot read properties of null') ){
             return `This ${unit} dose not exist`;
+        }
+
+        if( error.message.includes('user_id') ){
+            return `This user id dose not exist`;
         }
     }
 
