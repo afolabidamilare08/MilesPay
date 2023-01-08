@@ -21,6 +21,8 @@ const bankRouter = require('./routes/banks');
 const bugRouter = require('./routes/report_bug');
 const cryptoRouter = require('./routes/crypto');
 const cryptoOrderRouter = require('./routes/crypto_order');
+const GiftcardRouter = require('./routes/Giftcard');
+const GiftcardOrderRouter = require('./routes/Giftcard_order');
 
 app.use(
     cors({
@@ -50,6 +52,8 @@ app.use('/banks',bankRouter)
 app.use('/bug',bugRouter)
 app.use('/crypto',cryptoRouter)
 app.use('/crypto_order',cryptoOrderRouter)
+app.use('/gift_card',GiftcardRouter)
+app.use('/gift_order',GiftcardOrderRouter)
 
 
 const PORT = process.env.PORT || 5005;

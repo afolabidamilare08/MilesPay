@@ -16,7 +16,10 @@ const VerifyUserToken = ( req, res, next ) => {
 
         jwt.verify( token, process.env.JWT_SEC, (err, user) => {
 
+            console.log(token)
+
             if (err) {
+                // console.log(err)
                 res.status(403).json({
                     error_message: "Invalid Token" ,
                     special_message:null

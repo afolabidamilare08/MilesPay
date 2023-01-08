@@ -38,17 +38,22 @@ const MongoDBerrorformat  = (error,unit) => {
             return "Another crypto currency is already using this address"
         }
 
-        if( error.message.includes('crypto_address')){
-            return "Another crypto currency is already using this address"
+        if( error.message.includes('Gbrand_name')){
+            return "This brand already exists"
         }
 
     }else{
-        if( error.message.includes('Cannot read properties of null') ){
-            return `This ${unit} dose not exist`;
-        }
 
         if( error.message.includes('user_id') ){
             return `This user id dose not exist`;
+        }
+
+        if( error.message.includes('Gbrand') ){
+            return `This Brand dose not exist`;
+        }
+
+        if( error.message.includes('Cannot read properties of null') ){
+            return `This ${unit} dose not exist`;
         }
     }
 

@@ -72,8 +72,8 @@ const WithdrawSchema = Joi.object({
 
 
 const Transaction_PinSchema = Joi.object({ 
-    old_pin: Joi.number().min(4).max(4).required(),
-    new_pin: Joi.number().min(4).max(4).required(),
+    old_pin: Joi.string().min(4).max(4).required(),
+    new_pin: Joi.string().min(4).max(4).required(),
 })
 
 
@@ -103,6 +103,30 @@ const CryptoOrderSchema = Joi.object({
     crypto_proof: Joi.object()
 })
 
+
+
+
+const GbrandSchema = Joi.object({
+    Gbrand_name:Joi.string().required(),
+    Gbrand_description: Joi.string().required(),
+    Gbrand_image: Joi.object()
+})
+
+const GiftcardSchema = Joi.object({
+    Giftcard_brand:Joi.string().required(),
+    Giftcard_country: Joi.string(),
+    Giftcard_type: Joi.string().required(),
+    Giftcard_price_per_dollar: Joi.number().required()
+})
+
+const GiftOrderSchema = Joi.object({
+    Giftcard_brand:Joi.string().required(),
+    Giftcard_country: Joi.string(),
+    Giftcard_type: Joi.string(),
+    Giftcard_amount: Joi.number().required(),
+    order_image: Joi.object()
+})
+
 exports.validateSignup = validator(signupSchema)
 exports.validateSignin = validator(signinSchema)
 exports.validateEdit = validator(editprofileSchema)
@@ -118,6 +142,11 @@ exports.validateUserVerification = validator(VerifyUserSchema)
 exports.validateCryptoVerification = validator(CryptoSchema)
 exports.validateCryptoVerification = validator(CryptoSchema)
 exports.validateCryptoOrderVerification = validator(CryptoOrderSchema)
+
+
+exports.validateGbrandVerification = validator(GbrandSchema)
+exports.validateGiftcardVerification = validator(GiftcardSchema)
+exports.validateGiftOrderVerification = validator(GiftOrderSchema)
 
 
 exports.validateBank = validator(BankSchema)
