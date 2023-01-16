@@ -688,6 +688,7 @@ router.post( '/send_user_otp', async (req,res) => {
                         // return 
                     } )
                     .catch( err => {
+                        console.log(err)
                         let server_error_message = MongoDBerrorformat(err)
                         return res.status(403).json({
                             error_message: server_error_message == "server error" ? "Server Error" : server_error_message ,
@@ -728,6 +729,7 @@ router.post( '/send_user_otp', async (req,res) => {
         } )
         .catch( err => {
             let server_error_message = MongoDBerrorformat(err)
+            console.log(err)
             return res.status(403).json({
                 error_message: server_error_message == "server error" ? "Server Error" : server_error_message ,
                 special_message:null
