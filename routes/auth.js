@@ -711,7 +711,7 @@ router.post( '/send_user_otp', async (req,res) => {
     
                 newOtp.save()
                     .then( (otpDetails) => {
-                        SendEmail(otpDetails)
+                        VerifyUserEmail(otpDetails)
                         res.status(200).json(otpDetails)
                         // return 
                     } )
