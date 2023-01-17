@@ -174,8 +174,6 @@ router.post('/tease2nd_order', VerifyUserToken, async (req,res) => {
                 dollar_price: Thecrypto.crypto_resell_dollar_price
             })
 
-            console.log(CalculateCryptoFunction)
-
             return res.status(200).json({
                 crypto_details:Thecrypto._doc,
                 amount_to_receive_Innaira: AmountToRecieve.price,
