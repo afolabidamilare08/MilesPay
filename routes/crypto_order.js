@@ -39,7 +39,7 @@ const CalculateCryptoFunction = (data) => {
 
     price = price * dollar_price
 
-    return { price:price, theCryptoamount:theCryptoamount  }
+    return ({ price:price, theCryptoamount:theCryptoamount  })
 
 } 
 
