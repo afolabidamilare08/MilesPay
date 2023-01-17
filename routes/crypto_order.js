@@ -178,7 +178,7 @@ router.post('/tease2nd_order', VerifyUserToken, async (req,res) => {
                 crypto_details:Thecrypto._doc,
                 amount_to_receive_Innaira: AmountToRecieve.price,
                 crypto_wallet_type:value.crypto_wallet_type,
-                crypto_amount_received:CalculateCryptoFunction.theCryptoamount
+                crypto_amount_received:"CalculateCryptoFunction.theCryptoamount"
             })
 
         } )
