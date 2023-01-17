@@ -218,25 +218,48 @@ router.post('/add_gift_card', VerifyAdminToken, async (req,res) => {
     Gbrand.findOne({"_id":value.Giftcard_brand})
         .then( (gbrand) => {
 
-            const newGiftcard = new Giftcard({
+            Giftcard.findOne({
                 Giftcard_brand:gbrand._id,
                 Giftcard_country:value.Giftcard_country ? value.Giftcard_country : null,
                 Giftcard_type:value.Giftcard_type,
-                Giftcard_price_per_dollar:value.Giftcard_price_per_dollar
-            })
+            }).then( (itExist) => {
 
-            newGiftcard.save()
-                .then( (savedGcard) => {
-                    return res.status(201).json(savedGcard)
-                } )
-                .catch( err => {
-                    let server_error_message = MongoDBerrorformat(err)
+                if ( itExist ) {
                     return res.status(403).json({
-                        error_message: server_error_message == "server error" ? "Server Error" : server_error_message ,
+                        error_message:"This giftcard already exist",
                         special_message:null
                     })
-                } )
+                }else{
+                    
+                    const newGiftcard = new Giftcard({
+                        Giftcard_brand:gbrand._id,
+                        Giftcard_country:value.Giftcard_country ? value.Giftcard_country : null,
+                        Giftcard_type:value.Giftcard_type,
+                        Giftcard_price_per_dollar:value.Giftcard_price_per_dollar
+                    })
+        
+                    newGiftcard.save()
+                        .then( (savedGcard) => {
+                            return res.status(201).json(savedGcard)
+                        } )
+                        .catch( err => {
+                            let server_error_message = MongoDBerrorformat(err)
+                            return res.status(403).json({
+                                error_message: server_error_message == "server error" ? "Server Error" : server_error_message ,
+                                special_message:null
+                            })
+                        } )
 
+                }
+
+            } )
+            .catch( err => {
+                let server_error_message = MongoDBerrorformat(err)
+                return res.status(403).json({
+                    error_message: server_error_message == "server error" ? "Server Error" : server_error_message ,
+                    special_message:null
+                })
+            } )
         } )
         .catch( err => {
             let server_error_message = MongoDBerrorformat(err)

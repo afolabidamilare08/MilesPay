@@ -27,6 +27,24 @@ const CalculatePriceFunction = (data) => {
 
 
 
+const CalculateCryptoFunction = (data) => {
+
+    var crypto_price = data.crypto_price
+    var cryptoAmount_toTrade = data.crypto_amount_received
+    var dollar_price = data.dollar_price
+
+    var theCryptoamount = cryptoAmount_toTrade/crypto_price 
+
+    var price = theCryptoamount * crypto_price
+
+    price = price * dollar_price
+
+    return { price, theCryptoamount  }
+
+} 
+
+
+
 
 const savePictures = async ( req,res,next ) => {
 
@@ -132,6 +150,51 @@ router.post('/tease_order', VerifyUserToken, async (req,res) => {
         } )
     
 } )
+
+
+
+
+
+
+router.post('/tease2nd_order', VerifyUserToken, async (req,res) => {
+
+    const { error, value } = validateCryptoOrderVerification(req.body)
+
+    if (error) {
+        return res.status(400).json(Joierrorformat(error.details[0]))
+    }
+
+
+    Crypto.findOne({"_id":value.crypto_id})
+        .then( (Thecrypto) => {
+
+            const AmountToRecieve = CalculateCryptoFunction({
+                crypto_price: Thecrypto.crypto_init_price_per_one,
+                crypto_amount_received: value.crypto_amount_received,
+                dollar_price: Thecrypto.crypto_resell_dollar_price
+            })
+
+            return res.status(200).json({
+                crypto_details:Thecrypto._doc,
+                amount_to_receive_Innaira: AmountToRecieve.price,
+                crypto_wallet_type:value.crypto_wallet_type,
+                crypto_amount_received:CalculateCryptoFunction.theCryptoamount
+            })
+
+        } )
+        .catch( err => {
+            let server_error_message = MongoDBerrorformat(err)
+            return res.status(403).json({
+                error_message: server_error_message == "server error" ? "Server Error" : server_error_message ,
+                special_message:null
+            })
+        } )
+    
+} )
+
+
+
+
 
 
 
