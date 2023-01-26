@@ -103,6 +103,9 @@ router.put('/edit_crypto/:id', VerifyAdminToken, async (req,res) => {
 
 } )
 
+
+// gdtd
+
 router.put('/delete_crypto/:id', VerifyAdminToken, async (req,res) => {
 
     Crypto.findOneAndDelete({"_id":req.params.id})
