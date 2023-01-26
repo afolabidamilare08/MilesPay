@@ -324,6 +324,24 @@ router.put('/edit_giftcard/:id', VerifyAdminToken, async (req,res) => {
 
 
 
+router.put('/delete_giftcard/:id', VerifyAdminToken, async (req,res) => {
+
+            Giftcard.findOneAndDelete({"_id":req.params.id})
+                .then( (updatedGcard) => {
+                    return res.status(200).json(updatedGcard)
+                } )
+                .catch( err => {
+                    let server_error_message = MongoDBerrorformat(err)
+                    return res.status(403).json({
+                        error_message: server_error_message == "server error" ? "Server Error" : server_error_message ,
+                        special_message:null
+                    })
+                } )
+
+} )
+
+
+
 
 router.get('/gift_card/:id', async (req,res) => {
 
