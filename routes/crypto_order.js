@@ -115,6 +115,28 @@ const DeleteUploadedImage = (data) => {
 }
 
 
+
+
+router.get('/all_crypto_orders', VerifyAdminToken, async (req,res) => {
+
+    CryptoOrder.find().sort({ _id: -1 })
+        .then( (AllOrders) => {
+            return res.status(200).json(AllOrders)
+        } )
+        .catch( err => {
+            console.log(err)
+            let server_error_message = MongoDBerrorformat(err)
+            return res.status(403).json({
+                error_message: server_error_message == "server error" ? "Server Error" : server_error_message ,
+                special_message:null
+            })
+        } )
+
+} )
+
+
+
+
 router.post('/tease_order', VerifyUserToken, async (req,res) => {
 
     const { error, value } = validateCryptoOrderVerification(req.body)
