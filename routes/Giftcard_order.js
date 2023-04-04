@@ -199,4 +199,20 @@ router.get('/all_myorders', VerifyUserToken, async (req,res) => {
 
 } )
 
+router.get('/all_gift_orders', VerifyAdminToken, async (req,res) => {
+
+    GiftcardOrder.find().sort({ _id: -1 })
+        .then( (myorders) => {
+            return res.status(200).json(myorders)
+        } )
+        .catch( err => {
+            let server_error_message = MongoDBerrorformat(err,"Giftcard")
+            return res.status(403).json({
+                error_message: server_error_message == "server error" ? "Server Error" : server_error_message ,
+                special_message:null
+            })
+        } )
+
+} )
+
 module.exports = router

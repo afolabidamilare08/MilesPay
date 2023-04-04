@@ -76,6 +76,10 @@ const Transaction_PinSchema = Joi.object({
     new_pin: Joi.string().min(4).max(4).required(),
 })
 
+const ConfirmTransaction_PinSchema = Joi.object({ 
+    pin: Joi.string().min(4).max(4).required(),
+})
+
 
 
 
@@ -153,6 +157,7 @@ exports.validateBank = validator(BankSchema)
 exports.validateWithdrawal = validator(WithdrawSchema)
 
 exports.validateTransactionPin = validator(Transaction_PinSchema)
+exports.validateConfirmTransactionPin = validator(ConfirmTransaction_PinSchema)
 
 
 exports.validateReportBug = validator(ReportBugSchema)

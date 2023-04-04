@@ -6,7 +6,7 @@ const GiftcardOrderSchema = new mongoose.Schema({
     Gift_card: { type: Object, required: true, unique: false },
     amountToreceive: { type: Number, required: true, unique: false },
     giftcard_value: { type: Number, required: true, unique: false },
-    order_status: { type: String, required: true, unique: false },
+    order_status: { type: String, required: true, unique: false, enum: ['Pending', 'Success', 'Failed'] },
     order_message: { type: String, required: false, unique: false },
     order_image:{ type: Object, required:false, unique: false }
 }, {
@@ -14,6 +14,6 @@ const GiftcardOrderSchema = new mongoose.Schema({
 })
 
 
-const GiftcardOrder = mongoose.model("GiftcardOrder", GiftcardOrderSchema)
+const GiftcardOrder = mongoose.model("GiftcardOrder", GiftcardOrderSchema) 
 
 module.exports = GiftcardOrder

@@ -12,7 +12,8 @@ const { validateSignup,
         validateVerifyForgotPassword, 
         validateForgotPasswordEmailReset, 
         validateUserVerification, 
-        validateWithdrawal } = require("../validator/formsValidator");
+        validateWithdrawal, 
+        validateConfirmTransactionPin} = require("../validator/formsValidator");
 const { Joierrorformat, MongoDBerrorformat } = require("../err/error_edit");
 const { VerifyUserToken } = require("../validator/TokenValidator");
 const https = require('https');
@@ -400,6 +401,39 @@ router.put('/update_pin', VerifyUserToken, async (req,res) => {
                 special_message:null
             })
         } )
+
+} )
+
+
+router.post('/confirm_transaction_pin', VerifyUserToken, async (req,res) => {
+
+    
+    const { error, value } = validateConfirmTransactionPin(req.body)
+
+    if (error) {
+        return res.status(400).json(Joierrorformat(error.details[0]))
+    }
+
+    if ( req.user.transaction_pin ) {
+        
+        const hashedPin = CryptoJS.AES.decrypt(req.user.transaction_pin, process.env.CRYPTO_PIN_SEC)
+        const OriginalPin = hashedPin.toString(CryptoJS.enc.Utf8)
+
+        if (OriginalPin !== value.pin) {
+            return res.status(403).json({
+                error_message: "Your old pin is incorrect" ,
+                special_message:null
+            });   
+        }else{
+            return res.status(200).json({message:"Transaction Pin Is Correct"})
+        }
+
+    }else{
+        return res.status(403).json({
+            error_message: "You are yet to create a transaction pin" ,
+            special_message:null
+        });  
+    }
 
 } )
 

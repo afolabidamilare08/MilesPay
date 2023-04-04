@@ -358,7 +358,7 @@ router.put('/crypto_order_edit/:id', VerifyAdminToken, async (req,res) => {
 
 } )
 
-router.get('/crypto_order_detail/:id', VerifyAdminToken, async (req,res) => {
+router.get('/crypto_order_detail/:id', VerifyUserToken, async (req,res) => {
 
     CryptoOrder.findOne({"_id":req.params.id})
         .then( (Order) => {
