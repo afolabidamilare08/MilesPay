@@ -3,6 +3,7 @@ const {MongoDBerrorformat, Joierrorformat } = require("../err/error_edit");
 const Gbrand = require("../models/Gbrand_model");
 const Giftcard = require("../models/Giftcard_model");
 const GiftcardOrder = require("../models/Giftcard_order_model");
+const User = require("../models/user_model");
 const { validateGbrandVerification, validateGiftcardVerification, validateGiftOrderVerification } = require("../validator/formsValidator");
 const { VerifyAdminToken, FormidableVefification, VerifyUserToken } = require("../validator/TokenValidator");
 const cloudinary = require('cloudinary').v2;
@@ -213,6 +214,71 @@ router.get('/all_gift_orders', VerifyAdminToken, async (req,res) => {
             })
         } )
 
+} )
+
+router.get('/gift_order/:id', VerifyUserToken, async ( req, res ) => {
+
+    GiftcardOrder.findOne({"_id":req.params.id})
+        .then( ( (GiftOrder) => {
+            return res.status(200).json(GiftOrder)
+        } ) )
+        .catch( err => {
+            let server_error_message = MongoDBerrorformat(err,"Giftcard")
+            return res.status(403).json({
+                error_message: server_error_message == "server error" ? "Server Error" : server_error_message ,
+                special_message:null
+            })
+        } )
+
+} )
+
+
+router.put('/gift_order_edit/:id', VerifyAdminToken, async ( req, res ) => {
+
+    if ( !req.body.status ) {
+        return res.status(403).json({
+            error_message: "Order Status is required" ,
+            special_message:null
+        })
+    }
+
+    GiftcardOrder.findOneAndUpdate({"_id":req.params.id},{
+        $set:{
+            order_status:req.body.status
+        }
+    },{new:true})
+        .then( ( (GiftOrder) => {
+
+            if( GiftOrder.order_status === 'Success' ){
+                User.findOneAndUpdate({"_id":req.user._id},{
+                    $set: {
+                        wallet_balance: req.user.wallet_balance + GiftOrder.amountToreceive
+                    }
+                },{ new: true })
+                    .then( (userUp) => {
+                        return res.status(200).json(GiftOrder)
+                    } )
+                    .catch( err => {
+                        let server_error_message = MongoDBerrorformat(err)
+                        return res.status(403).json({
+                            error_message: server_error_message == "server error" ? "Server Error" : server_error_message ,
+                            special_message:null
+                        })
+                    } )
+            }else{
+                return res.status(200).json(GiftOrder)
+            }
+
+        } ) )
+        .catch( err => {
+            let server_error_message = MongoDBerrorformat(err,"Giftcard")
+            console.log(err)
+            return res.status(403).json({
+                error_message: server_error_message == "server error" ? "Server Error" : server_error_message ,
+                special_message:null
+            })
+        } )
+        
 } )
 
 module.exports = router

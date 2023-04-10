@@ -15,7 +15,7 @@ const { validateSignup,
         validateWithdrawal, 
         validateConfirmTransactionPin} = require("../validator/formsValidator");
 const { Joierrorformat, MongoDBerrorformat } = require("../err/error_edit");
-const { VerifyUserToken } = require("../validator/TokenValidator");
+const { VerifyUserToken, VerifyAdminToken } = require("../validator/TokenValidator");
 const https = require('https');
 const ForgotOtp = require("../models/reset_password_otp");
 const nodemailer = require('nodemailer');
@@ -421,7 +421,7 @@ router.post('/confirm_transaction_pin', VerifyUserToken, async (req,res) => {
 
         if (OriginalPin !== value.pin) {
             return res.status(403).json({
-                error_message: "Your old pin is incorrect" ,
+                error_message: "Your pin is incorrect" ,
                 special_message:null
             });   
         }else{
@@ -904,7 +904,7 @@ router.put('/wallet_withdrawal', VerifyUserToken, async (req,res) => {
                         bank_name:Thebank.bank_name
                     }
                     const amount_withdraw = value.withdrawal_amount
-                    const withdrawal_status = 'Success'
+                    const withdrawal_status = 'Pending'
                 
                     const AddWithdrawal = new WalletWithdrawal({
                         user,
@@ -970,6 +970,74 @@ router.get('/my_withdrawals', VerifyUserToken, async (req,res) => {
             special_message:null
         })
     } )
+
+} ) 
+
+
+router.get('/get_all_withdrawals', VerifyAdminToken, async (req,res) => {
+
+    WalletWithdrawal.find().sort({ _id: -1 })
+        .then( (all_withdrawals) => {
+            return res.status(200).json(all_withdrawals)
+        } )
+        .catch( err => {
+            let server_error_message = MongoDBerrorformat(err)
+            return res.status(403).json({
+                error_message: server_error_message == "server error" ? "Server Error" : server_error_message ,
+                special_message:null
+            })
+        } )
+
+} )
+
+
+
+
+router.put('/approve_withdrawal/:id', VerifyAdminToken, async (req,res) => {
+
+    if ( !req.body.status ) {
+        return res.status(403).json({
+            error_message: "Status is required" ,
+            special_message:null
+        })
+    }
+
+    WalletWithdrawal.findOneAndUpdate({"_id":req.params.id},{
+        $set:{
+            withdrawal_status:req.body.status
+        }
+    },{new:true})
+        .then( (TheWithdrawal) => {
+            // return res.status(200).json(TheWithdrawal)
+
+            if( TheWithdrawal.withdrawal_status === 'Failed' ){
+                User.findOneAndUpdate({"_id":req.user._id},{
+                    $set: {
+                        wallet_balance: req.user.wallet_balance + TheWithdrawal.amount_withdraw
+                    }
+                },{ new: true })
+                    .then( (userUp) => {
+                        return res.status(200).json(TheWithdrawal)
+                    } )
+                    .catch( err => {
+                        let server_error_message = MongoDBerrorformat(err)
+                        return res.status(403).json({
+                            error_message: server_error_message == "server error" ? "Server Error" : server_error_message ,
+                            special_message:null
+                        })
+                    } )
+            }else{
+                return res.status(200).json(TheWithdrawal)
+            }
+
+        } )
+        .catch( err => {
+            let server_error_message = MongoDBerrorformat(err)
+            return res.status(403).json({
+                error_message: server_error_message == "server error" ? "Server Error" : server_error_message ,
+                special_message:null
+            })
+        } )
 
 } )
 
