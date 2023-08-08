@@ -4,8 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon index.js",
-    "deploy": "npm run build && gh-pages -d dist"
+    "start": "node index.js"
   },
   "author": "",
   "license": "ISC",
